@@ -4,9 +4,9 @@ import os
 import re
 import subprocess as sp
 from time import sleep
+from pathlib import Path
 
 from DisplayCAL.meta import name as appname
-from DisplayCAL.options import verbose
 
 
 def get_osascript_args(applescript):
@@ -89,7 +89,7 @@ def osascript(applescript):
 
     """
     args = get_osascript_args(applescript)
-    p = sp.Popen(["osascript"] + args, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE)
+    p = sp.Popen(["osascript"] + args, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, text=True)
     output, errors = p.communicate()
     retcode = p.wait()
     return retcode, output, errors
@@ -123,11 +123,12 @@ def get_serial():
             stdin=sp.PIPE,
             stdout=sp.PIPE,
             stderr=sp.PIPE,
+            text=True,
         )
         output, errors = p.communicate()
     except Exception:
         return None
-    match = re.search(r'"IOPlatformSerialNumber"\s*=\s*"([^"]*)"', output.decode())
+    match = re.search(r'"IOPlatformSerialNumber"\s*=\s*"([^"]*)"', output)
     if match:
         return match.group(1)
 
@@ -136,13 +137,11 @@ def get_model_id():
     """Return this mac's model id"""
     try:
         p = sp.Popen(
-            ["sysctl", "hw.model"], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE
+            ["sysctl", "hw.model"], stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, text=True,
         )
         output, errors = p.communicate()
     except BaseException:
         return None
-    # TODO: There is possibly an error waiting for us here in the next line. Not on Mac
-    #       can not test it right now!
     return "".join(output).split(None, 1)[-1].strip()
 
 
@@ -156,32 +155,41 @@ def get_machine_attributes(model_id=None):
         model_id = get_model_id()
         if not model_id:
             return None
-    pf = "/System/Library/PrivateFrameworks"
-    f = ".framework/Versions/A/Resources/English.lproj"
-    sk = "%s/ServerKit%s/XSMachineAttributes" % (pf, f)
-    si = "%s/ServerInformation%s/SIMachineAttributes" % (pf, f)
-    if os.path.isfile(si + ".plist"):
+
+    # Location of this information has changed several times since Mac OS X 10.0
+    pf = Path("/System/Library/PrivateFrameworks")
+    subdir = "Versions/A/Resources"
+    en = "en.lproj"
+    english = "English.lproj" # deprecated long ago
+    si_dir = pf.joinpath("ServerInformation.framework", subdir)
+    si_en = si_dir.joinpath(en)
+    si_english = si_dir.joinpath(english)
+    si_mattr = "SIMachineAttributes"
+    
+    if si_en.is_dir():
+        # macOS since 2009 or so
+        filename = str(si_en.joinpath(si_mattr))
+    elif si_eng.is_dir():
         # Mac OS X 10.8 or newer
-        filename = si
+        filename = str(si_english.joinpath(si_mattr))
     else:
         # Mac OS X 10.6/10.7
-        filename = sk
+        filename = str(pf.joinpath("ServerKit.framework", subdir, english, "XSMachineAttributes"))
     try:
         p = sp.Popen(
             ["defaults", "read", filename, model_id],
             stdin=sp.PIPE,
             stdout=sp.PIPE,
             stderr=sp.PIPE,
+            text=True,
         )
         output, errors = p.communicate()
     except Exception:
         return None
+
     attrs = {}
     for line in output.splitlines():
-        match = re.search(r'(\w+)\s*=\s*"?(.*?)"?\s*;', line.decode())
+        match = re.search(r'(\w+)\s*=\s*"?(.*?)"?\s*;', line)
         if match:
-            # Need to double unescape backslashes
-            attrs[match.group(1)] = (
-                match.group(2).decode("string_escape").decode("string_escape")
-            )
+            attrs[match.group(1)] = (match.group(2))
     return attrs
