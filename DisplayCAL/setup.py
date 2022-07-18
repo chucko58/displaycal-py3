@@ -471,12 +471,6 @@ def setup():
         if "--use-setuptools" in sys.argv[1:] and not os.path.exists("use-setuptools"):
             open("use-setuptools", "w").close()
         try:
-            from ez_setup import use_setuptools as ez_use_setuptools
-
-            ez_use_setuptools()
-        except ImportError:
-            pass
-        try:
             import setuptools
             from setuptools import setup, Extension
 
