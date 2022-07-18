@@ -628,7 +628,7 @@
 						<h4>Mac OS X:</h4>
 						<ul>
 							<li><a href="https://developer.apple.com/xcode/">XCode</a></li>
-							<li><a href="https://pypi.org/project/py2app/">py2app</a> if you want to build a standalone executable. On Mac OS X before 10.5, install setuptools first: <code>sudo python util/ez_setup.py setuptools</code></li>
+							<li><a href="https://pypi.org/project/py2app/">py2app</a> if you want to build a standalone executable.</li>
 						</ul>
 
 						<h4>Windows:</h4>
@@ -762,7 +762,7 @@
 							<dt><code>bdist_pyi</code></dt>
 								<dd>An alternative to <code>bdist_standalone</code>, which uses <a href="http://www.pyinstaller.org/">PyInstaller</a> instead of bbfreeze/py2app/py2exe.</dd>
 							<dt><code>bdist_standalone</code></dt>
-								<dd>Creates a standalone application that does not require a Python installation. Uses bbfreeze on Linux, py2app on Mac OS X and py2exe on Windows. setup.py will try and automatically download/install these packages for you if they are not yet installed and if not using the --use-distutils switch. Note: On Mac OS X, older versions of py2app (before 0.4) are not able to access files inside python “egg” files (which are basically ZIP-compressed folders). Setuptools, which is needed by py2app, will normally be installed in “egg” form, thus preventing those older py2app versions from accessing its contents. To fix this, you need to remove any installed setuptools-&lt;version&gt;-py&lt;python-version&gt;.egg files from your Python installation's site-packages directory (normally found under <code>/Library/Frameworks/Python.framework/Versions/Current/lib</code>). Then, run <code>sudo python util/ez_setup.py -Z setuptools</code> which will install setuptools unpacked, thus allowing py2app to acces all its files. This is no longer an issue with py2app 0.4 and later.</dd>
+								<dd>Creates a standalone application that does not require a Python installation. Uses bbfreeze on Linux, py2app on Mac OS X and py2exe on Windows. setup.py will try and automatically download/install these packages for you if they are not yet installed and if not using the --use-distutils switch.</dd>
 							<dt><code>buildservice</code></dt>
 								<dd>Creates control files for openSUSE Build Service (also happens implicitly when invoking <code>sdist</code>).</dd>
 							<dt><code>finalize_msi</code> (Windows only)</dt>

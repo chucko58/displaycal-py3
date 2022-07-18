@@ -614,7 +614,7 @@
 						<h4>Mac OS X :</h4>
 						<ul>
 							<li><a href="https://developer.apple.com/xcode/">XCode</a> ;</li>
-							<li><a href="https://pypi.org/project/py2app/">py2app</a> si vous désirez construire un exécutable autonome. Sur une version de Mac OS X antérieure à 10.5, installez d’abord setuptools : <code>sudo python util/ez_setup.py setuptools</code></li>
+							<li><a href="https://pypi.org/project/py2app/">py2app</a> si vous désirez construire un exécutable autonome.</li>
 						</ul>
 
 						<h4>Windows :</h4>
@@ -742,7 +742,7 @@
 							<dt><code>bdist_pyi</code></dt>
 								<dd>Peut remplacer <code>bdist_standalone</code>, et utilise <a href="http://www.pyinstaller.org/">PyInstaller</a> plutôt que bbfreeze/py2app/py2exe.</dd>
 							<dt><code>bdist_standalone</code></dt>
-								<dd>Crée une application autonome qui n’exige pas d’installation de Python. Utilise bbfreeze sous Linux, py2app sous Mac OS X et py2exe sous Windows. setup.py essaiera de télécharger et d’installer automatiquement ces paquets pour vous — s’ils ne sont pas déjà installés — en utilisant le commutateur --use-distutils. Note : sous Mac OS X, les anciennes versions de py2app (avant 0.4) ne peuvent pas accéder aux fichiers situés à l’intérieur des fichiers « œufs» (« eggs ») de python (qui, de base, sont des dossiers compressé en ZIP). Setuptools, qui est nécessaire pour py2app, sera normalement installé sous la forme « d’œuf », ce qui empêche les anciennes versions des py2app d’accéder à son contenu. Afin de corriger ceci, vous devrez supprimer tous les fichiers setuptools-&lt;version&gt;-py&lt;python-version&gt;.egg déjà installés du répertoire site-packages de votre installation de Python (on le trouve en général sous <code>/Library/Frameworks/Python.framework/Versions/Current/lib</code>). Exécutez ensuite <code>sudo python util/ez_setup.py -Z setuptools</code> qui va installer setuptools « dépaqueté », permettant ainsi à py2app d’accéder à tous ses fichiers. Ceci n’est plus un problème avec py2app 0.4 ou plus récent.</dd>
+								<dd>Crée une application autonome qui n’exige pas d’installation de Python. Utilise bbfreeze sous Linux, py2app sous Mac OS X et py2exe sous Windows. setup.py essaiera de télécharger et d’installer automatiquement ces paquets pour vous — s’ils ne sont pas déjà installés — en utilisant le commutateur --use-distutils.</dd>
 							<dt><code>buildservice</code></dt>
 								<dd>Crée des fichiers de contrôle pour openSUSE Build Service (ceci est aussi effectué implicitement lors de l’appel à <code>sdist</code>).</dd>
 							<dt><code>finalize_msi</code> (Windows uniquement)</dt>
