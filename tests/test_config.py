@@ -7,6 +7,19 @@ import sys
 def test_default_values_1():
     """Test default values of module level variables."""
     from DisplayCAL import config
+    if sys.platform == "win32":
+        from DisplayCAL.config import commonprogramfiles
+    elif sys.platform == "darwin":
+        from DisplayCAL.config import prefs, prefs_home
+    else:
+        from DisplayCAL.config import (
+            xdg_config_dir_default,
+            xdg_config_home,
+            xdg_data_dirs,
+            xdg_data_home,
+            xdg_data_home_default,
+        )
+
     config.initcfg()
 
     assert config.configparser.DEFAULTSECT == "Default"
@@ -23,22 +36,28 @@ def test_default_values_1():
     assert config.pyext != ""  # .py
     # $HOME/Documents/development/displaycal/DisplayCAL
     assert config.pydir != ""
-    assert config.xdg_config_dir_default == "/etc/xdg"
-    assert config.xdg_config_home == os.path.expanduser("~/.config")
-    assert config.xdg_data_home == os.path.expanduser("~/.local/share")
-    assert config.xdg_data_home_default == os.path.expanduser("~/.local/share")
+    if sys.platform == "win32":
+        pass # TODO
+    elif sys.platform == "darwin":
+        pass # TODO
+    else:
+        assert xdg_config_dir_default == "/etc/xdg"
+        assert xdg_config_home == os.path.expanduser("~/.config")
+        assert xdg_data_home == os.path.expanduser("~/.local/share")
+        assert xdg_data_home_default == os.path.expanduser("~/.local/share")
 
     # skip the rest of the test for now
     return
 
-    assert config.xdg_data_dirs == [
-        "/usr/share/pop",
-        os.path.expanduser("~/.local/share/flatpak/exports/share"),
-        "/var/lib/flatpak/exports/share",
-        "/usr/local/share",
-        "/usr/share",
-        "/var/lib",
-    ]
+    if sys.platform not in ("darwin", "win32"):
+        assert config.xdg_data_dirs == [
+            "/usr/share/pop",
+            os.path.expanduser("~/.local/share/flatpak/exports/share"),
+            "/var/lib/flatpak/exports/share",
+            "/usr/local/share",
+            "/usr/share",
+            "/var/lib",
+        ]
 
     from DisplayCAL.__version__ import VERSION_STRING
 
