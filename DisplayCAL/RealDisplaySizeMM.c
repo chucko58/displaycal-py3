@@ -341,7 +341,7 @@ disppath **get_displays() {
         this would be possible.
      */
 
-    int i;
+    unsigned int i;
     CGDisplayErr dstat;
     CGDisplayCount dcount;		/* Number of display IDs */
     CGDirectDisplayID *dids;	/* Array of display IDs */
@@ -361,7 +361,7 @@ disppath **get_displays() {
     }
 
     /* Found dcount displays */
-    debugrr2((errout,"Found %d screens\n",dcount));
+    debugrr2((errout,"Found %u screens\n",dcount));
 
     /* Allocate our list */
     if ((disps = (disppath **)calloc(sizeof(disppath *), dcount + 1)) == NULL) {
