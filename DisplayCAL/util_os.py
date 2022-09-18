@@ -15,6 +15,7 @@ import sys
 import tempfile
 import time
 import importlib
+from typing import Dict
 
 if sys.platform not in ("darwin", "win32"):
     # Linux
@@ -58,7 +59,7 @@ if sys.platform == "win32":
     import winerror
 
 # Cache used for safe_shell_filter() function
-_cache = {}
+_cache: Dict[str, re.Pattern] = {}
 _MAXCACHE = 100
 
 FILE_ATTRIBUTE_REPARSE_POINT = 1024
