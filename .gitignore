@@ -19,3 +19,4 @@ __pycache__/
 /DisplayCAL/ref/*.log
 *~
 .*~
+.DS_Store
